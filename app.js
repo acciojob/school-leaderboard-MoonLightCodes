@@ -33,7 +33,8 @@ app.get("/topRankings", async(req, res) => {
 
   const { limit = onePageArticleCount, offset = 0 } = req.query;
   console.log(limit,offset);
-  const resData = await Leaderboard.find().limit(+limit).skip(+offset);
+  const resData = await Leaderboard.find().limit(+limit).skip(+offset).lean();
+  console.log(resData);
   res.status(200).json({ data: resData });
 });
 
