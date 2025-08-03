@@ -4,11 +4,11 @@ const app = express();
 const config = require("./config.json");
 
 //== connect to database
-const mongoURI =
-  config.MONGODB_URI || "mongodb://localhost:27017" + "/newsFeed";
+const mongoURI = "mongodb://localhost:27017" + "/newsFeed";
 
 let mongoose = require("mongoose");
 const Leaderboard = require("./model");
+const { link } = require("superagent");
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -28,7 +28,14 @@ app.get("/", (req, res) => {
   res.status(200).send("hello world!");
 });
 
-// your code here!
+app.get("/topRankings", async(req, res) => {
+  // res.status(200).send("hello world!");
+
+  const { limit = onePageArticleCount, offset = 0 } = req.query;
+  console.log(limit,offset);
+  const resData = await Leaderboard.find().limit(+limit).skip(+offset);
+  res.status(200).json({ data: resData });
+});
 
 // ==end==
 
